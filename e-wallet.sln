@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-wallet.REST_API", "e-wallet.REST_API\e-wallet.REST_API.csproj", "{73AAD5D4-629B-430C-8798-5029B5EBB048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-wallet.REST_API", "e-wallet.REST_API\e-wallet.REST_API.csproj", "{73AAD5D4-629B-430C-8798-5029B5EBB048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-wallet.Data.Model", "e-wallet.Data.Model\e-wallet.Data.Model.csproj", "{28BBAD17-5079-458E-B173-9F752B5F7513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{73AAD5D4-629B-430C-8798-5029B5EBB048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73AAD5D4-629B-430C-8798-5029B5EBB048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73AAD5D4-629B-430C-8798-5029B5EBB048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28BBAD17-5079-458E-B173-9F752B5F7513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28BBAD17-5079-458E-B173-9F752B5F7513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28BBAD17-5079-458E-B173-9F752B5F7513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28BBAD17-5079-458E-B173-9F752B5F7513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
