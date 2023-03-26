@@ -23,33 +23,52 @@ namespace e_wallet.REST_API.Controllers
             _context = context;
         }
 
-        // GET: api/Transactions
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetHistories()
+        // PUT: Replenish e-wallet account
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ReplenishAmount(Guid id, User user, double amount)
         {
-            if (_context.Transactions == null)
+            if (id != user.Id)
+                return BadRequest("User ID mismatch");
+
+            if (user.Identified)
             {
-                return NotFound();
+
+                if ((user.Balance + amount) <= 100000)
+                {
+                    user.Balance += amount;
+                }
+                else
+                {
+                    throw new ArgumentException("Balance will exceeds 100000!");
+                }
             }
-            return await _context.Transactions.ToListAsync();
+            else
+            {
+                if ((user.Balance + amount) <= 10000)
+                {
+                    user.Balance += amount;
+                }
+                else
+                {
+                    throw new ArgumentException("Balance will exceeds 10000!");
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: api/Transactions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
+        // GET: Get total number and amount of recharge
+        [HttpGet]
+        public async Task<IActionResult> GetHistories()
+        {            
+            return NoContent();
+        }
+
+        // GET: Get e-wallet balance
+        [HttpGet]
+        public double GetBalance(User user)
         {
-            if (_context.Transactions == null)
-            {
-                return NotFound();
-            }
-            var transaction = await _context.Transactions.FindAsync(id);
-
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return transaction;
+            return user.Balance;
         }
 
         //// PUT: api/Transactions/5
@@ -85,18 +104,18 @@ namespace e_wallet.REST_API.Controllers
 
         // POST: api/Transactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
-        {
-            if (_context.Transactions == null)
-            {
-                return Problem("Entity set 'EWalletContext.Histories'  is null.");
-            }
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
+        //{
+        //    if (_context.Transactions == null)
+        //    {
+        //        return Problem("Entity set 'EWalletContext.Histories'  is null.");
+        //    }
+        //    _context.Transactions.Add(transaction);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransaction", new { id = transaction.Id }, transaction);
-        }
+        //    return CreatedAtAction("GetTransaction", new { id = transaction.Id }, transaction);
+        //}
 
         //// DELETE: api/Transactions/5
         //[HttpDelete("{id}")]
