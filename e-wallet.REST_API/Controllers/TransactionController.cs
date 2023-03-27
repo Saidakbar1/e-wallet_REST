@@ -64,8 +64,14 @@ namespace e_wallet.REST_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHistories(Guid userId)
         {
-            var totalNumber = _context.Transactions.Where(transaction => transaction.UserId == userId && transaction.Date >= DateTime.Now.AddDays(-30)).Count();
-            return Ok();
+            var transactionOfMonth = _context.Transactions.Where(transaction => transaction.UserId == userId && transaction.Date >= DateTime.Now.AddDays(-30));
+            double recharge = 0;
+            foreach (var oneTransaction in transactionOfMonth) 
+            {
+                recharge += oneTransaction.Amount;
+            }
+            int totalTransactions = transactionOfMonth.Count();
+            return Ok(new { totalTransactions, recharge } );
         }
 
         // GET: Get e-wallet balance
