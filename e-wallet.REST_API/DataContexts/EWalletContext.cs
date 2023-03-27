@@ -17,5 +17,6 @@ namespace e_wallet.REST_API.DataContexts
         }
 
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

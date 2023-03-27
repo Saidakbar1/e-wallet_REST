@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using e_wallet.Data.Model;
 using e_wallet.REST_API.DataContexts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace e_wallet.REST_API.Controllers
 {
@@ -24,18 +25,20 @@ namespace e_wallet.REST_API.Controllers
         }
 
         // PUT: Replenish e-wallet account
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ReplenishAmount(Guid id, User user, double amount)
+        [HttpPut]
+        public async Task<IActionResult> ReplenishAmount(Guid userId, double amount)
         {
-            if (id != user.Id)
-                return BadRequest("User ID mismatch");
-
-            if (user.Identified)
+            var userToChange = _context.Users.Where(UserId => UserId.Id == userId).FirstOrDefault();
+            if (userToChange == null) 
+            {
+                throw new ArgumentException("User not found");
+            }
+            if (userToChange.Identified)
             {
 
-                if ((user.Balance + amount) <= 100000)
+                if ((userToChange.Balance + amount) <= 100000)
                 {
-                    user.Balance += amount;
+                    userToChange.Balance += amount;
                 }
                 else
                 {
@@ -44,31 +47,37 @@ namespace e_wallet.REST_API.Controllers
             }
             else
             {
-                if ((user.Balance + amount) <= 10000)
+                if ((userToChange.Balance + amount) <= 10000)
                 {
-                    user.Balance += amount;
+                    userToChange.Balance += amount;
                 }
                 else
                 {
                     throw new ArgumentException("Balance will exceeds 10000!");
                 }
             }
-
-            return NoContent();
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // GET: Get total number and amount of recharge
         [HttpGet]
-        public async Task<IActionResult> GetHistories()
-        {            
-            return NoContent();
+        public async Task<IActionResult> GetHistories(Guid userId)
+        {
+            var totalNumber = _context.Transactions.Where(transaction => transaction.UserId == userId && transaction.Date >= DateTime.Now.AddDays(-30)).Count();
+            return Ok();
         }
 
         // GET: Get e-wallet balance
         [HttpGet]
-        public double GetBalance(User user)
+        public double GetBalance(Guid userId)
         {
-            return user.Balance;
+            var userToReturn = _context.Users.Where(UserId => UserId.Id == userId).FirstOrDefault();
+            if (userToReturn == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+            return userToReturn.Balance;
         }
 
         //// PUT: api/Transactions/5
